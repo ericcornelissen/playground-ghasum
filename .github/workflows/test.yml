@@ -63,6 +63,8 @@ jobs:
         uses: $/.github/actions/ghasum
         with:
           mode: update
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.0
       - name: Not yet in gha.sum
         uses: actions/setup-go@v6.5.0
       - name: show gha.sum

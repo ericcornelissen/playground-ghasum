@@ -22,19 +22,19 @@ const WORKFLOW = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
 
 let cache;
 switch (OS) {
-case "linux":   cache = "/home/runner/work/_actions";  break;
-case "macos":   cache = "/Users/runner/work/_actions"; break;
-case "windows": cache = "C:\\a\\_actions";             break;
+case "darwin": cache = "/Users/runner/work/_actions"; break;
+case "linux":  cache = "/home/runner/work/_actions";  break;
+case "win32":  cache = "C:\\a\\_actions";             break;
 }
 
 let archive;
 switch (`${OS}-${ARCH}`) {
-case "linux-arm64":   archive = "ghasum_linux_arm64.tar.gz";  break;
-case "linux-x64":     archive = "ghasum_linux_amd64.tar.gz";  break;
-case "macos-arm64":   archive = "ghasum_darwin_arm64.tar.gz"; break;
-case "macos-x64":     archive = "ghasum_darwin_amd64.tar.gz"; break;
-case "windows-arm64": archive = "ghasum_windows_arm64.zip";   break;
-case "windows-x64":   archive = "ghasum_windows_amd64.zip";   break;
+case "darwin-arm64": archive = "ghasum_darwin_arm64.tar.gz"; break;
+case "darwin-x64":   archive = "ghasum_darwin_amd64.tar.gz"; break;
+case "linux-arm64":  archive = "ghasum_linux_arm64.tar.gz";  break;
+case "linux-x64":    archive = "ghasum_linux_amd64.tar.gz";  break;
+case "win32-arm64":  archive = "ghasum_windows_arm64.zip";   break;
+case "win32-x64":    archive = "ghasum_windows_amd64.zip";   break;
 }
 
 console.log("OS     ", OS)
