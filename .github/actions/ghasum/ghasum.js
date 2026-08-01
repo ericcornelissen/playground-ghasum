@@ -49,7 +49,7 @@ const VERSION = env.INPUT_VERSION;
 
 // --- Script ------------------------------------------------------------------
 try {
-	if (!["install", "update", "verify"].includes(MODE)) {
+	if (MODE !== "install" && MODE !== "verify") {
 		throw new Error(`mode must be 'install' or 'verify', got: ${MODE}`);
 	}
 
@@ -65,12 +65,6 @@ try {
 	case "install":
 		await appendFile(env.GITHUB_PATH, cwd);
 		break;
-	case "update":
-		exec(
-			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict"],
-			{ cwd: join(cache, OWNER, PROJECT, SHA) },
-		);
-		break;
 	case "verify":
 		exec(
 			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
@@ -84,6 +78,7 @@ try {
 	exit(0);
 } catch (error) {
 	console.error(`::error::${error}`);
+	console.log(error)
 	nuke();
 	exit(1);
 }

@@ -49,23 +49,3 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: echo 'success'
-  test-update:
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runs-on:
-          - macos-26
-          - ubuntu-24.04
-          - windows-2025
-    steps:
-      - name: Verify action checksums
-        uses: $/.github/actions/ghasum
-        with:
-          mode: update
-      - name: Checkout repository
-        uses: actions/checkout@v6.0.0
-      - name: Not yet in gha.sum
-        uses: actions/setup-go@v6.5.0
-      - name: show gha.sum
-        run: cat .github/workflows/gha.sum
