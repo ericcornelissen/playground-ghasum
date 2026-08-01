@@ -104,7 +104,7 @@ function nuke() {
 
 async function sum(target, algo, sum, sumfile) {
   const data = await readFile(target);
-  const hasher = crypto.createHash();
+  const hasher = createHash();
   hasher.update(data);
 
   const got = hasher.digest("hex");
