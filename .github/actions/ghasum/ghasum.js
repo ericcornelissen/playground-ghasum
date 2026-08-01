@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { spawnSync } from "node:child_process";
 import { appendFile, mkdtemp } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
