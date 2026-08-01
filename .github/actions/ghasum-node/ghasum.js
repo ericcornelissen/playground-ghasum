@@ -14,6 +14,8 @@ const OS = platform().toLowerCase();
 
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
+const OWNER = env.GITHUB_REPOSITORY.split("/")[0];
+const PROJECT = env.GITHUB_REPOSITORY.split("/")[1];
 const WORKFLOW = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
 
 let cache;
