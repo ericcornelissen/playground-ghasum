@@ -22,6 +22,9 @@ runs:
       shell: bash
       run: |
         echo "$GHASUM"
+        echo "***"
+        echo "tree /home/runner/work/_actions"
+        tree /home/runner/work/_actions
 
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
