@@ -5,7 +5,7 @@ inputs:
   checksum:
     description: The checksum of the ghasum checksums file
     required: false
-    default: sha256:ea8d55ff6d1a0a733a499f52594e25841038e65de1f45986cb0eea3ecd011c34
+    default: sha256:881d0ea994c0add2e369a7562479396fb516d6d35626c6652dc491bb2ed4a11f
   mode:
     description: Whether to 'verify' checksums or just 'install' ghasum
     required: false
@@ -13,7 +13,7 @@ inputs:
   version:
     description: The version of ghasum to use
     required: false
-    default: v0.6.3
+    default: v0.6.4
 
 runs:
   using: node24
