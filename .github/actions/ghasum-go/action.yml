@@ -25,6 +25,9 @@ runs:
         echo "***"
         echo "tree /home/runner/work/_actions"
         tree /home/runner/work/_actions
+        echo "***"
+        cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/*
+
 
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
