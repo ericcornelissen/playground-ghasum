@@ -42,7 +42,7 @@ runs:
       run: |
         set -euo pipefail
         WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
-        go run github.com/chains-project/ghasum/cmd/ghasum@latest verify \
+        go run github.com/chains-project/ghasum/cmd/ghasum@action verify \
           -cache /Users/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
 
     # Linux
@@ -55,7 +55,7 @@ runs:
       run: |
         set -euo pipefail
         WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
-        go run github.com/chains-project/ghasum/cmd/ghasum@latest verify \
+        go run github.com/chains-project/ghasum/cmd/ghasum@action verify \
           -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
 
     # Windows
@@ -69,9 +69,9 @@ runs:
         $WorkflowParts = $env:WORKFLOW -split '@'
         $WorkflowPath = ($WorkflowParts[0] -split '/')[2..4] -join '/'
         if (Test-Path -Path 'C:\a\_actions') {
-          go run github.com/chains-project/ghasum/cmd/ghasum verify -cache C:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -cache C:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
         } else {
-          go run github.com/chains-project/ghasum/cmd/ghasum verify -cache D:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -cache D:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
         }
 
     # Invalidate actions
