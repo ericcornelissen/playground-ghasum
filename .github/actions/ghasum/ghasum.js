@@ -109,7 +109,7 @@ async function sum(wd, target, algo, sum, sumfile) {
 	let want = sum;
 	if (!want) {
 		const sums = await readFile(join(wd, sumfile));
-		const line = sums.find(line => line.endsWith(target));
+		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
 	}
 
