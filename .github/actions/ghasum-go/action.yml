@@ -18,6 +18,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: DEBUG
+      run: |
+        echo "$GHASUM"
+
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
       shell: bash

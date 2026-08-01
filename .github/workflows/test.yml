@@ -10,7 +10,6 @@ env:
     actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
     step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf zTn6q6y54XCU92WeEvyJAl8XTI4bE1BVzyIgT9N2lYk=
 
-
 jobs:
   test-composite:
     runs-on: ubuntu-24.04
