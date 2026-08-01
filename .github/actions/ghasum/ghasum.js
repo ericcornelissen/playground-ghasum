@@ -37,6 +37,11 @@ case "windows-arm64": archive = "ghasum_windows_arm64.zip";   break;
 case "windows-x64":   archive = "ghasum_windows_amd64.zip";   break;
 }
 
+console.log("OS     ", OS)
+console.log("ARCH   ", ARCH)
+console.log("cache  ", cache)
+console.log("archive", archive)
+
 // --- Inputs ------------------------------------------------------------------
 const CHECKSUM = env.INPUT_CHECKSUM.replace(/^sha256:/, "");
 const MODE = env.INPUT_MODE;
