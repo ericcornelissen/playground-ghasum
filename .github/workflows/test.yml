@@ -5,12 +5,7 @@ on:
 permissions: read-all
 
 env:
-  GHASUM: |
-    version 1
-
-    actions/setup-node@v6.0.0 GRqp8XDY/VE7U6CS0j0+ssTCaCaa2ba5wGKAjhRCR1s=
-    actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
-    step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf zTn6q6y54XCU92WeEvyJAl8XTI4bE1BVzyIgT9N2lYk=
+  GHASUM: version 1\n\nactions/setup-node@v6.0.0 GRqp8XDY/VE7U6CS0j0+ssTCaCaa2ba5wGKAjhRCR1s=\nactions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=\nstep-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf zTn6q6y54XCU92WeEvyJAl8XTI4bE1BVzyIgT9N2lYk=
 
 jobs:
   test-composite:
