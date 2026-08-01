@@ -26,8 +26,6 @@ runs:
         #echo "tree -a /home/runner/work/_actions"
         #tree -a /home/runner/work/_actions
         echo "***"
-        echo '${{ toJson(github) }}'
-        echo "***"
         cat '${{ github.action_path }}/../../gha.sum'
 
     - name: Validate input 'mode'
