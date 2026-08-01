@@ -108,7 +108,7 @@ async function sum(wd, target, algo, sum, sumfile) {
 	const got = hasher.digest("hex");
 	let want = sum;
 	if (!want) {
-		const sums = await readFile(join(wd, sumfile)).toString();
+		const sums = await readFile(join(wd, sumfile), { encoding: "utf8" });
 		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
 	}
