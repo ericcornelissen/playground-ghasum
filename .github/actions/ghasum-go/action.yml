@@ -29,7 +29,7 @@ runs:
         tree -a /home/runner/work/_actions
         echo "***"
         echo 'cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github'
-        cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github
+        cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github/actions/workflow/gha.sum
         echo "***"
         echo '${{ github }}'
         echo "***"
