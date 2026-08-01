@@ -14,7 +14,7 @@ const OS = platform().toLowerCase();
 
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
-const WORKFLOW_FILE = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
+const WORKFLOW = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
 
 let cache;
 switch (OS) {
