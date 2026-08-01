@@ -1,12 +1,6 @@
 version 1
 
-actions/cache@v5.0.1 dvxPOVXwpQqe5zlrdaLXW5r2YXEqqnzbCpHTj/ZlwyI=
 actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
 actions/setup-node@v6.0.0 GRqp8XDY/VE7U6CS0j0+ssTCaCaa2ba5wGKAjhRCR1s=
-actions/upload-artifact@v6.0.0 pGNYwgnMwE8lQptaxeFNnwBLuWlkpSuQLb+kTVzspLg=
-asdf-vm/actions@v4.0.0 eGZn+tf2SoEwu2pptGEHoXu4mnO/zJHvqWldHAhWmtM=
-ericcornelissen/odgen-action@v1.1.1 UZ+sIMi5lX7uHvMbJfQf/qlN2ZPmUbCCgZkQmy4RZvQ=
-github/codeql-action@149d184a5153ea45e6fbcef5588ac7b8c7af9835 dkzMaeLyvJwwtYJlocsykf4d2bLUpQJq5bDcsC+v9p8=
-github/codeql-action@v4.31.7 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
 stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 g4PCgPHeeaVpSPTRcoBKth4QnrZGGQXwBEoEAsAXivs=
 step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf zTn6q6y54XCU92WeEvyJAl8XTI4bE1BVzyIgT9N2lYk=

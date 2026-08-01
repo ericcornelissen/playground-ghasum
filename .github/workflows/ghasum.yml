@@ -31,10 +31,10 @@ jobs:
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         # with:
         #   token: ${{ steps.automation-token.outputs.token }}
-      - name: Install ghasum
-        uses: ./.github/actions/ghasum
-        with:
-          mode: install
+      # - name: Install ghasum
+      #   uses: ./.github/actions/ghasum
+      #   with:
+      #     mode: install
       - name: Update gha.sum
         run: ghasum update
       - name: Commit gha.sum
