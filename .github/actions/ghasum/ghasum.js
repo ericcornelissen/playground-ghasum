@@ -17,8 +17,8 @@ const OS = platform().toLowerCase();
 
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
-const OWNER = env.GITHUB_REPOSITORY.split("/")[0];
-const PROJECT = env.GITHUB_REPOSITORY.split("/")[1];
+const OWNER = env.GITHUB_REPOSITORY.split("/").at(0);
+const PROJECT = env.GITHUB_REPOSITORY.split("/").at(1);
 const WORKFLOW = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
 
 let cache;
@@ -57,11 +57,9 @@ try {
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
 	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
-	// exec(["shasum", "-a", "256", "-c", "-"], { cwd, input: `${CHECKSUM}  ${CHECKSUM_FILE}` });
-	await sum(join(cwd, CHECKSUM_FILE), "sha256", CHECKSUM);
+	await sum(cwd, CHECKSUM_FILE, "sha256", CHECKSUM);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
-	// exec(["shasum", "--check", "--ignore-missing", CHECKSUM_FILE], { cwd });
-	await sum(join(cwd, archive), "sha256", null, CHECKSUM_FILE);
+	await sum(cwd, archive, "sha256", null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
@@ -102,14 +100,21 @@ function nuke() {
 	exec(["rm", "-rf", cache]);
 }
 
-async function sum(target, algo, sum, sumfile) {
-  const data = await readFile(target);
-  const hasher = createHash(algo);
-  hasher.update(data);
+async function sum(wd, target, algo, sum, sumfile) {
+	const data = await readFile(join(wd, target));
+	const hasher = createHash(algo);
+	hasher.update(data);
 
-  const got = hasher.digest("hex");
-  const want = sum ?? "TODO";
-  if (got !== want) {
-    throw new Error(`checksum mismatch for ${target} ('${got}' != '${want}')`);
-  }
+	const got = hasher.digest("hex");
+	let want = sum;
+	if (!want) {
+		const sums = await readFile(join(wd, sumfile));
+		const line = sums.find(line => line.endsWith(target));
+		want = line.split(" ").at(0);
+	}
+
+	console.info(`sum(${target}, ${algo}) == ${want}`);
+	if (got !== want) {
+		throw new Error(`checksum mismatch for ${target} ('${got}' != '${want}')`);
+	}
 }
