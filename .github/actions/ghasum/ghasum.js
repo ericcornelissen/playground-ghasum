@@ -56,17 +56,17 @@ try {
 
 	switch (MODE) {
 	case "install":
-		appendFile(env.GITHUB_PATH, cwd);
+		await appendFile(env.GITHUB_PATH, cwd);
 		break;
 	case "update":
 		exec(
-			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict"],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;
 	case "verify":
 		exec(
-			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict"],
+			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;
