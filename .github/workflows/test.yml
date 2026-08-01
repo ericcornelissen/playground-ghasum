@@ -5,45 +5,20 @@ on:
 permissions: read-all
 
 jobs:
-  # test-composite:
-  #   runs-on: ubuntu-24.04
-  #   steps:
-  #     - name: Verify action checksums
-  #       uses: $/.github/actions/ghasum-composite
-  #     - name: Step with pre-script
-  #       uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
-  #       with:
-  #         egress-policy: audit
-  #     - name: Checkout repository
-  #       uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
-  #       with:
-  #         persist-credentials: false
-  #     - name: Step with post-scripts
-  #       uses: actions/setup-node@v6.0.0
-  #       with:
-  #         node-version: 20
-  #     - name: Install dependencies
-  #       run: echo 'success'
-  # test-go:
-  #   runs-on: ubuntu-24.04
-  #   steps:
-  #     - name: Verify action checksums
-  #       uses: $/.github/actions/ghasum-go
-  #     - name: Checkout repository
-  #       uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
-  #       with:
-  #         persist-credentials: false
-  #     - name: Step with post-scripts
-  #       uses: actions/setup-node@v6.0.0
-  #       with:
-  #         node-version: 20
-  #     - name: Install dependencies
-  #       run: echo 'success'
-  test-node:
+  test-install:
     runs-on: ubuntu-24.04
     steps:
       - name: Verify action checksums
-        uses: $/.github/actions/ghasum-node
+        uses: $/.github/actions/ghasum
+        with:
+          mode: install
+      - name: Use ghasum
+        run: ghasum version
+  test-verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify action checksums
+        uses: $/.github/actions/ghasum
       - name: Step with pre-script
         uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
         with:
@@ -58,3 +33,12 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: echo 'success'
+  test-update:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify action checksums
+        uses: $/.github/actions/ghasum
+        with:
+          mode: update
+      - name: Not yet in gha.sum
+        uses: actions/setup-go@v6.5.0

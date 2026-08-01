@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdtemp } from "node:fs/promises";
+import { appendFile, mkdtemp } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { env, exit } from "node:process";
@@ -54,11 +54,22 @@ try {
 	exec(["shasum", "--check", "--ignore-missing", CHECKSUM_FILE], { cwd });
 	exec(["tar", "-xf", archive], { cwd });
 
-	if (MODE === "verify") {
+	switch (MODE) {
+	case "install":
+		appendFile(GITHUB_PATH, cwd);
+		break;
+	case "update":
 		exec(
 			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
+		break;
+	case "verify":
+		exec(
+			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict", `${WORKFLOW}:${JOB}`],
+			{ cwd: join(cache, OWNER, PROJECT, SHA) },
+		);
+		break;
 	}
 
 	// TODO: expose
