@@ -5,11 +5,11 @@ on:
 permissions: read-all
 
 jobs:
-  test:
+  test-1:
     runs-on: ubuntu-24.04
     steps:
       - name: Verify action checksums
-        uses: ericcornelissen/ghasum-testground/.github/actions/ghasum2@main # todo current ref?
+        uses: $/.github/actions/ghasum
         env: # TODO: avoid?
           GH_TOKEN: ${{ github.token }}
       - name: Step with pre-script
@@ -29,17 +29,60 @@ jobs:
   test-2:
     runs-on: ubuntu-24.04
     steps:
+      - name: Verify action checksums
+        uses: $/.github/actions/ghasum2
+        env: # TODO: avoid?
+          GH_TOKEN: ${{ github.token }}
+      - name: Step with pre-script
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           persist-credentials: false
-      - name: Verify action checksums
-        uses: ./.github/actions/ghasum2
-        env: # TODO: avoid?
-          GH_TOKEN: ${{ github.token }}
       - name: Step with post-scripts
         uses: actions/setup-node@v6.0.0
         with:
           node-version: 20
       - name: Install dependencies
         run: echo 'success'
+
+  # test-old-1:
+  #   runs-on: ubuntu-24.04
+  #   steps:
+  #     - name: Verify action checksums
+  #       uses: ericcornelissen/ghasum-testground/.github/actions/ghasum2@main # todo current ref?
+  #       env: # TODO: avoid?
+  #         GH_TOKEN: ${{ github.token }}
+  #     - name: Step with pre-script
+  #       uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+  #       with:
+  #         egress-policy: audit
+  #     - name: Checkout repository
+  #       uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+  #       with:
+  #         persist-credentials: false
+  #     - name: Step with post-scripts
+  #       uses: actions/setup-node@v6.0.0
+  #       with:
+  #         node-version: 20
+  #     - name: Install dependencies
+  #       run: echo 'success'
+  # test-old-2:
+  #   runs-on: ubuntu-24.04
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+  #       with:
+  #         persist-credentials: false
+  #     - name: Verify action checksums
+  #       uses: ./.github/actions/ghasum2
+  #       env: # TODO: avoid?
+  #         GH_TOKEN: ${{ github.token }}
+  #     - name: Step with post-scripts
+  #       uses: actions/setup-node@v6.0.0
+  #       with:
+  #         node-version: 20
+  #     - name: Install dependencies
+  #       run: echo 'success'
