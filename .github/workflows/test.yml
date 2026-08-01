@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Verify action checksums
         uses: $/.github/actions/ghasum-composite
-        env: # TODO: avoid?
-          GH_TOKEN: ${{ github.token }}
       - name: Step with pre-script
         uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
         with:
@@ -46,8 +44,6 @@ jobs:
     steps:
       - name: Verify action checksums
         uses: $/.github/actions/ghasum-node
-        env: # TODO: avoid?
-          GH_TOKEN: ${{ github.token }}
       - name: Step with pre-script
         uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
         with:

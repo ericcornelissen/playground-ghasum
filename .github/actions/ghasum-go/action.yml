@@ -20,8 +20,6 @@ runs:
   steps:
     - name: DEBUG
       shell: bash
-      env:
-        GH_TOKEN: ${{ github.token }}
       run: |
         echo "$GHASUM"
         echo "***"
@@ -31,13 +29,9 @@ runs:
         #echo 'cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github'
         #cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github/actions/workflow/gha.sum
         echo "***"
-        echo '${{ github }}'
+        echo '${{ github.repository }}'
+        echo '${{ github.ref }}'
         echo "***"
-        if [ -n "$GH_TOKEN" ]; then
-            echo "GH_TOKEN is set and non-empty"
-        else
-            echo "GH_TOKEN is not set or is empty"
-        fi
 
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
