@@ -63,6 +63,7 @@ try {
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
 	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
+	exec(["ls", "-al", cwd], { cwd });
 
 	switch (MODE) {
 	case "install":

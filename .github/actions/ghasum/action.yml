@@ -5,7 +5,8 @@ inputs:
   checksum:
     description: The checksum of the ghasum checksums file
     required: false
-    default: sha256:881d0ea994c0add2e369a7562479396fb516d6d35626c6652dc491bb2ed4a11f
+    default: sha256:881d0ea994c0add2e369a7562479396fb516d6d35626c6652dc491bb2ed4a11F
+    #default: sha256:881d0ea994c0add2e369a7562479396fb516d6d35626c6652dc491bb2ed4a11f
   mode:
     description: Whether to 'verify' checksums or just 'install' ghasum
     required: false
