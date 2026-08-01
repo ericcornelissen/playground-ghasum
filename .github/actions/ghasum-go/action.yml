@@ -41,9 +41,8 @@ runs:
         WORKFLOW: ${{ github.workflow_ref }}
       run: |
         set -euo pipefail
-        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
         go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci \
-          -cache /Users/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
+          -cache /Users/runner/work/_actions -no-evict -offline
 
     # Linux
     - name: Verify the action checksums
@@ -54,9 +53,8 @@ runs:
         WORKFLOW: ${{ github.workflow_ref }}
       run: |
         set -euo pipefail
-        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
         go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci \
-          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
+          -cache /home/runner/work/_actions -no-evict -offline
 
     # Windows
     - name: Verify the action checksums
@@ -66,12 +64,10 @@ runs:
         JOB: ${{ github.job }}
         WORKFLOW: ${{ github.workflow_ref }}
       run: |
-        $WorkflowParts = $env:WORKFLOW -split '@'
-        $WorkflowPath = ($WorkflowParts[0] -split '/')[2..4] -join '/'
         if (Test-Path -Path 'C:\a\_actions') {
-          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci -cache C:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci -cache C:\a\_actions -no-evict -offline
         } else {
-          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci -cache D:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+          go run github.com/chains-project/ghasum/cmd/ghasum@action verify -ci -cache D:\a\_actions -no-evict -offline
         }
 
     # Invalidate actions
