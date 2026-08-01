@@ -1,5 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { arch, platform } from "node:os";
+import { mkdtemp } from "node:fs/promises";
+import { arch, platform, tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { env, exit } from "node:process";
 
 // --- Constants ---------------------------------------------------------------
@@ -10,6 +12,8 @@ const REPOSITORY = "chains-project/ghasum";
 const ARCH = arch().toLowerCase();
 const OS = platform().toLowerCase();
 
+console.log(env);
+// const tmp = resolve(env.GITHUB_ACTION_PATH, "..", "..", "gha.sum");
 const WORKFLOW = env.GITHUB_WORKFLOW_REF.replace(`${env.GITHUB_REPOSITORY}/`, "").split("@")[0];
 const JOB = env.GITHUB_JOB;
 
@@ -34,7 +38,7 @@ try {
 		throw new Error(`mode must be 'install' or 'verify', got: ${MODE}`);
 	}
 
-	const cwd = "/tmp/ghasum";
+	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
 	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	exec(["shasum", "-a", "256", "-c", "-"], { cwd, input: `${CHECKSUM}  ${CHECKSUM_FILE}` });
