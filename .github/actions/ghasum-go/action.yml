@@ -21,17 +21,22 @@ runs:
     - name: DEBUG
       shell: bash
       run: |
-        echo "$GHASUM"
-        echo "***"
-        echo "tree -a /home/runner/work/_actions"
-        tree -a /home/runner/work/_actions
+        #echo "$GHASUM"
         #echo "***"
-        #echo 'cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github'
-        #cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github/actions/workflow/gha.sum
+        #echo "tree -a /home/runner/work/_actions"
+        #tree -a /home/runner/work/_actions
         echo "***"
-        echo '${{ github.repository }}'
-        echo '${{ github.ref }}'
+        echo '${{ toJson(github) }}'
+        echo 'action:             ${{ github.action }}'
+        echo 'action_path:        ${{ github.action_path }}'
+        echo 'action_ref:         ${{ github.action_ref }}'
+        echo 'action_repository:  ${{ github.action_repository }}'
+        echo 'action_status:      ${{ github.action_status }}'
+        echo 'actor:              ${{ github.'actor }}'
+        echo 'repository:         ${{ github.repository }}'
+        echo 'ref:                ${{ github.ref }}'
         echo "***"
+        tree -a '/home/runner/work/_actions/${{ github.repository }}'
 
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
