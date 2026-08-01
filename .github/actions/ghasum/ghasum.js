@@ -38,10 +38,12 @@ case "win32-arm64":  archive = "ghasum_windows_arm64.zip";   break;
 case "win32-x64":    archive = "ghasum_windows_amd64.zip";   break;
 }
 
-console.log("OS     ", OS)
-console.log("ARCH   ", ARCH)
-console.log("cache  ", cache)
-console.log("archive", archive)
+let executable;
+switch (OS) {
+case "darwin": executable = "ghasum";     break;
+case "linux":  executable = "ghasum";     break;
+case "win32":  executable = "ghasum.exe"; break;
+}
 
 // --- Inputs ------------------------------------------------------------------
 const CHECKSUM = env.INPUT_CHECKSUM.replace(/^sha256:/, "");
@@ -57,9 +59,9 @@ try {
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
 	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
-	await sum(cwd, CHECKSUM_FILE, "sha256", CHECKSUM);
+	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
-	await sum(cwd, archive, "sha512", null, CHECKSUM_FILE);
+	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
@@ -68,18 +70,15 @@ try {
 		break;
 	case "verify":
 		exec(
-			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			[join(cwd, executable), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;
 	}
 
-	// TODO: expose
-
 	exit(0);
 } catch (error) {
 	console.error(`::error::${error}`);
-	console.log(error)
 	nuke();
 	exit(1);
 }
@@ -102,18 +101,21 @@ function nuke() {
 
 async function sum(wd, target, algo, sum, sumfile) {
 	const data = await readFile(join(wd, target));
-	const hasher = createHash(algo);
+	const hasher = createHash(`sha${algo}`);
 	hasher.update(data);
 
 	const got = hasher.digest("hex");
-	let want = sum;
-	if (!want) {
+	let want;
+	if (sum) {
+		console.info(`echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -`);
+		want = sum;
+	} else {
+		console.info(`shasum --check --ignore-missing ${sumfile}`);
 		const sums = await readFile(join(wd, sumfile), { encoding: "utf8" });
 		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
 	}
 
-	console.info(`sum(${target}, ${algo}) == ${want}`);
 	if (got !== want) {
 		throw new Error(`checksum mismatch for ${target} ('${got}' != '${want}')`);
 	}
