@@ -23,10 +23,11 @@ runs:
       run: |
         echo "$GHASUM"
         echo "***"
-        echo "tree /home/runner/work/_actions"
-        tree /home/runner/work/_actions
+        echo "tree -a /home/runner/work/_actions"
+        tree -a /home/runner/work/_actions
         echo "***"
-        cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/*
+        echo 'cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github'
+        cat /home/runner/work/_actions/ericcornelissen/playground-ghasum/*/.github
 
 
     - name: Validate input 'mode'
