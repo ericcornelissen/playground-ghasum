@@ -28,7 +28,7 @@ runs:
         echo "***"
         echo '${{ toJson(github) }}'
         echo "***"
-        tree -a '/home/runner/work/_actions/${{ github.repository }}'
+        cat '${{ github.action_path }}/../../gha.sum'
 
     - name: Validate input 'mode'
       if: inputs.mode != 'verify' && inputs.mode != 'install'
