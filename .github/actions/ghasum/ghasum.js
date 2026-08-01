@@ -58,10 +58,10 @@ try {
 	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	// exec(["shasum", "-a", "256", "-c", "-"], { cwd, input: `${CHECKSUM}  ${CHECKSUM_FILE}` });
-	sum(CHECKSUM_FILE, "sha256", CHECKSUM);
+	await sum(join(cwd, CHECKSUM_FILE), "sha256", CHECKSUM);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
 	// exec(["shasum", "--check", "--ignore-missing", CHECKSUM_FILE], { cwd });
-	sum(join(cwd, archive), "sha256", null, CHECKSUM_FILE);
+	await sum(join(cwd, archive), "sha256", null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
