@@ -34,7 +34,7 @@ case "macos-x64":     archive = "ghasum_darwin_amd64.tar.gz"; break;
 case "windows-arm64": archive = "ghasum_windows_arm64.zip";   break;
 case "windows-x64":   archive = "ghasum_windows_amd64.zip";   break;
 }
-console.log(env)
+
 // --- Inputs ------------------------------------------------------------------
 const CHECKSUM = env.INPUT_CHECKSUM.replace(/^sha256:/, "");
 const MODE = env.INPUT_MODE;
@@ -60,13 +60,13 @@ try {
 		break;
 	case "update":
 		exec(
-			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;
 	case "verify":
 		exec(
-			[join(cwd, "ghasum"), "update", "-cache", cache, "-no-evict", `${WORKFLOW}:${JOB}`],
+			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict"],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;

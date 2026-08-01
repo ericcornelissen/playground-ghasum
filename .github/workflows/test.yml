@@ -12,6 +12,8 @@ jobs:
         uses: $/.github/actions/ghasum
         with:
           mode: install
+      - name: echo PATH
+        run: echo "$PATH"
       - name: Use ghasum
         run: ghasum version
   testverify:
