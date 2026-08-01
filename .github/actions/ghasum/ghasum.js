@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { spawnSync } from "node:child_process";
-import { appendFile, mkdtemp } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { appendFile, mkdtemp, readFile } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { env, exit } from "node:process";
 
 // --- Constants ---------------------------------------------------------------
@@ -56,9 +57,11 @@ try {
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
 	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
-	exec(["shasum", "-a", "256", "-c", "-"], { cwd, input: `${CHECKSUM}  ${CHECKSUM_FILE}` });
+	// exec(["shasum", "-a", "256", "-c", "-"], { cwd, input: `${CHECKSUM}  ${CHECKSUM_FILE}` });
+	sum(CHECKSUM_FILE, "sha256", CHECKSUM);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
-	exec(["shasum", "--check", "--ignore-missing", CHECKSUM_FILE], { cwd });
+	// exec(["shasum", "--check", "--ignore-missing", CHECKSUM_FILE], { cwd });
+	sum(join(cwd, archive), "sha256", null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
@@ -97,4 +100,16 @@ function exec(command, opts) {
 
 function nuke() {
 	exec(["rm", "-rf", cache]);
+}
+
+async function sum(target, algo, sum, sumfile) {
+  const data = await readFile(target);
+  const hasher = crypto.createHash();
+  hasher.update(data);
+
+  const got = hasher.digest("hex");
+  const want = sum ?? "TODO";
+  if (got !== want) {
+    throw new Error(`checksum mismatch for ${target} ('${got}' != '${want}')`);
+  }
 }
