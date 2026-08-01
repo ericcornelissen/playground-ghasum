@@ -80,6 +80,7 @@ try {
 	exit(0);
 } catch (error) {
 	console.error(`::error::${error}`);
+	console.log(error)
 	nuke();
 	exit(1);
 }
