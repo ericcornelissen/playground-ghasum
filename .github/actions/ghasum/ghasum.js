@@ -59,7 +59,7 @@ try {
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	await sum(cwd, CHECKSUM_FILE, "sha256", CHECKSUM);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
-	await sum(cwd, archive, "sha256", null, CHECKSUM_FILE);
+	await sum(cwd, archive, "sha512", null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
