@@ -12,10 +12,16 @@ const REPOSITORY = "chains-project/ghasum";
 const ARCH = arch().toLowerCase();
 const OS = platform().toLowerCase();
 
-console.log(env);
-// const tmp = resolve(env.GITHUB_ACTION_PATH, "..", "..", "gha.sum");
-const WORKFLOW = env.GITHUB_WORKFLOW_REF.replace(`${env.GITHUB_REPOSITORY}/`, "").split("@")[0];
 const JOB = env.GITHUB_JOB;
+const SHA = env.GITHUB_WORKFLOW_SHA;
+const WORKFLOW_FILE = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
+
+let cache;
+switch (OS) {
+case "linux":   cache = "/home/runner/work/_actions";  break;
+case "macos":   cache = "/Users/runner/work/_actions"; break;
+case "windows": cache = "C:\\a\\_actions";             break;
+}
 
 let archive;
 switch (`${OS}-${ARCH}`) {
@@ -47,7 +53,10 @@ try {
 	exec(["tar", "-xf", archive], { cwd });
 
 	if (MODE === "verify") {
-		exec(["./ghasum", "verify", "-cache", "/home/runner/work/_actions", "-no-evict", "-offline", `${WORKFLOW}:${JOB}`], { cwd });
+		exec(
+			[join(cwd, "ghasum"), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			{ cwd: join(cache, OWNER, PROJECT, SHA) },
+		);
 	}
 
 	// TODO: expose
@@ -55,6 +64,7 @@ try {
 	exit(0);
 } catch (error) {
 	console.error(`::error::${error}`);
+	console.log(error)
 	nuke();
 	exit(1);
 }
@@ -72,15 +82,5 @@ function exec(command, opts) {
 }
 
 function nuke() {
-	switch (OS) {
-	case "linux":
-		exec(["rm", "-rf", "/home/runner/work/_actions"]);
-		break;
-	case "macos":
-		exec(["rm", "-rf", "/Users/runner/work/_actions"]);
-		break;
-	case "windows":
-		exec(["rm", "-rf", "C:\\a\\_actions", "D:\\a\\_actions"]);
-		break;
-	}
+	exec(["rm", "-rf", cache]);
 }
