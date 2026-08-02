@@ -93,7 +93,9 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	await spawn(cmd, args, opts);
+	const { stdout, stderr } = await spawn(cmd, args, opts);
+	console.log("stdout", stdout)
+	console.log("stderr", stderr)
 }
 
 function nuke() {
