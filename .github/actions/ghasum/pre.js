@@ -94,8 +94,11 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { stdout } = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
-	console.info(stdout);
+	await spawn(cmd, args, {
+	  env: { ...env, GITHUB_TOKEN },
+		stdio: "inherit",
+		...opts,
+	});
 }
 
 function nuke() {
