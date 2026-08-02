@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { execFile } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import * as console from "node:console";
 import { createHash } from "node:crypto";
 import { appendFile, mkdtemp, readFile } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
 import { join } from "node:path";
-import { env, exit, stdout, stderr } from "node:process";
-import { promisify } from "node:util";
-
-const spawn = promisify(execFile);
+import { env, exit } from "node:process";
 
 // --- Constants ---------------------------------------------------------------
 const CHECKSUM_FILE = "checksums-sha512.txt";
@@ -61,19 +59,19 @@ try {
 	}
 
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
-	await exec(["mkdir", "-p", cwd]);
-	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
+	exec(["mkdir", "-p", cwd]);
+	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM, null);
-	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
+	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
 	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
-	await exec(["tar", "-xf", archive], { cwd });
+	exec(["tar", "-xf", archive], { cwd });
 
 	switch (MODE) {
 	case "install":
 		await appendFile(env.GITHUB_PATH, cwd);
 		break;
 	case "verify":
-		await exec(
+		exec(
 			[join(cwd, executable), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
 			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
@@ -82,19 +80,18 @@ try {
 
 	exit(0);
 } catch (error) {
-	stderr.write(`::error::${error}\n`);
+	console.error(`::error::${error}`);
 	nuke();
 	exit(1);
 }
 
 // --- Functions ---------------------------------------------------------------
-async function exec(command, opts) {
-	stdout.write(`$ ${command.join(" ")}\n`);
+function exec(command, opts) {
+	console.info("$", command.join(" ")});
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const process = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
-	stdout.write(process.stdout);
+	spawnSync(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
@@ -105,10 +102,8 @@ async function sum(wd, target, algo, sum, sumfile) {
 	const got = hasher.digest("hex");
 	let want;
 	if (sum) {
-		stdout.write(`$ echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -\n`);
 		want = sum;
 	} else {
-		stdout.write(`$ shasum --check --ignore-missing ${sumfile}\n`);
 		const sums = await readFile(join(wd, sumfile), { encoding: "utf8" });
 		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
