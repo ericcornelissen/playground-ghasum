@@ -8,7 +8,7 @@ import { join } from "node:path";
 import { env, exit } from "node:process";
 import { promisify } from "node:util";
 
-const exec = promisify(execFile);
+const spawn = promisify(execFile);
 
 // --- Constants ---------------------------------------------------------------
 const CHECKSUM_FILE = "checksums-sha512.txt";
@@ -94,7 +94,7 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { status, stdout, stderr } = await exec(cmd, args, opts);
+	const { status, stdout, stderr } = await spawn(cmd, args, opts);
 	if (status !== 0) {
 		throw new Error(`Command failed: ${stdout} ${stderr}`);
 	}
