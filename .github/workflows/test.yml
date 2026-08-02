@@ -15,10 +15,7 @@ jobs:
           - ubuntu-24.04
           - windows-2025
     steps:
-      - name: Verify action checksums
-        uses: $/.github/actions/ghasum
-        with:
-          mode: install
+      - uses: $/.github/actions/ghasum
       - name: echo PATH
         run: echo "$PATH"
       - name: Use ghasum
@@ -33,8 +30,7 @@ jobs:
           - ubuntu-24.04
           - windows-2025
     steps:
-      - name: Verify action checksums
-        uses: $/.github/actions/ghasum
+      - uses: $/.github/actions/ghasum
       - name: Step with pre-script
         uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
         with:
