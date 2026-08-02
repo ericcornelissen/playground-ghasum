@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { spawnSync } from "node:child_process";
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { appendFile, mkdtemp, readFile } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
 import { join } from "node:path";
 import { env, exit } from "node:process";
+import { promisify } from "node:util";
+
+const exec = promisify(execFile);
 
 // --- Constants ---------------------------------------------------------------
 const CHECKSUM_FILE = "checksums-sha512.txt";
@@ -57,22 +60,22 @@ try {
 	}
 
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
-	exec(["mkdir", "-p", cwd]);
-	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
+	await exec(["mkdir", "-p", cwd]);
+	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM);
-	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
+	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
 	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
-	exec(["tar", "-xf", archive], { cwd });
-	exec(["ls", "-al", cwd], { cwd });
+	await exec(["tar", "-xf", archive], { cwd });
+	await exec(["ls", "-al", cwd], { cwd });
 
 	switch (MODE) {
 	case "install":
 		await appendFile(env.GITHUB_PATH, cwd);
 		break;
 	case "verify":
-		exec(
-			["ghasum", "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
-			{ cwd: join(cache, OWNER, PROJECT, SHA), env: { PATH: `${env.PATH}:${cwd}`} },
+		await exec(
+			[join(cwd, executable), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			{ cwd: join(cache, OWNER, PROJECT, SHA) },
 		);
 		break;
 	}
@@ -86,12 +89,12 @@ try {
 }
 
 // --- Functions ---------------------------------------------------------------
-function exec(command, opts) {
+async function exec(command, opts) {
 	console.info(command.join(" "));
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { status, stdout, stderr } = spawnSync(cmd, args, opts);
+	const { status, stdout, stderr } = await exec(cmd, args, opts);
 	if (status !== 0) {
 		throw new Error(`Command failed: ${stdout} ${stderr}`);
 	}
