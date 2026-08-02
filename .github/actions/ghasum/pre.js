@@ -93,8 +93,8 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { stdout } = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
-	stdout.write(stdout);
+	const process = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
+	stdout.write(process.stdout);
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
