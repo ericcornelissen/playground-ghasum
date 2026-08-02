@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { appendFile, mkdtemp, readFile } from "node:fs/promises";
 import { arch, platform, tmpdir } from "node:os";
 import { join } from "node:path";
-import { env, exit } from "node:process";
+import { env, exit, stdout, stderr } from "node:process";
 import { promisify } from "node:util";
 
 const spawn = promisify(execFile);
@@ -18,7 +18,6 @@ const REPOSITORY = "chains-project/ghasum";
 const ARCH = arch().toLowerCase();
 const OS = platform().toLowerCase();
 
-// console.log(env)
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
 const OWNER = env.GITHUB_REPOSITORY.split("/").at(0);
@@ -83,23 +82,19 @@ try {
 
 	exit(0);
 } catch (error) {
-	console.error(`::error::${error}`);
+	stderr.write(`::error::${error}\n`);
 	nuke();
 	exit(1);
 }
 
 // --- Functions ---------------------------------------------------------------
 async function exec(command, opts) {
-	console.info("$", command.join(" "));
+	stdout.write(`$ ${command.join(" ")}\n`);
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
 	const { stdout } = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
-	console.info(stdout);
-}
-
-function nuke() {
-	exec(["rm", "-rf", cache]);
+	stdout.write(stdout);
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
@@ -110,10 +105,10 @@ async function sum(wd, target, algo, sum, sumfile) {
 	const got = hasher.digest("hex");
 	let want;
 	if (sum) {
-		console.info(`$ echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -`);
+		stdout.write(`$ echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -\n`);
 		want = sum;
 	} else {
-		console.info(`$ shasum --check --ignore-missing ${sumfile}`);
+		stdout.write(`$ shasum --check --ignore-missing ${sumfile}\n`);
 		const sums = await readFile(join(wd, sumfile), { encoding: "utf8" });
 		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
@@ -122,4 +117,8 @@ async function sum(wd, target, algo, sum, sumfile) {
 	if (got !== want) {
 		throw new Error(`checksum mismatch for ${target} ('${got}' != '${want}')`);
 	}
+}
+
+function nuke() {
+	exec(["rm", "-rf", cache]);
 }
