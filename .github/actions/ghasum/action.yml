@@ -18,6 +18,10 @@ inputs:
     description: The version of ghasum to use.
     required: false
     default: v0.6.4
+  workflow:
+    description: The version of ghasum to use.
+    required: false
+    default: ${{ job.workflow_ref }}
 
 runs:
   using: node24

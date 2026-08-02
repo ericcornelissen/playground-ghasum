@@ -18,12 +18,13 @@ const REPOSITORY = "chains-project/ghasum";
 const ARCH = arch().toLowerCase();
 const OS = platform().toLowerCase();
 
-console.log(env)
+// console.log(env)
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
 const OWNER = env.GITHUB_REPOSITORY.split("/").at(0);
 const PROJECT = env.GITHUB_REPOSITORY.split("/").at(1);
-const WORKFLOW = env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
+const WORKFLOW = env.INPUT_WORKFLOW; //env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
+const GITHUB_TOKEN = env.INPUT_TOKEN;
 
 let cache;
 switch (OS) {
@@ -93,10 +94,7 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	await spawn(cmd, args, {
-	  env: { ...env, GITHUB_TOKEN: env.INPUT_TOKEN },
-		...opts,
-	});
+	await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
 }
 
 function nuke() {
