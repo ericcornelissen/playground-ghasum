@@ -71,8 +71,8 @@ try {
 		break;
 	case "verify":
 		exec(
-			[join(cwd, executable), "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
-			{ cwd: join(cache, OWNER, PROJECT, SHA) },
+			["ghasum", "verify", "-cache", cache, "-no-evict", "-offline", `${WORKFLOW}:${JOB}`],
+			{ cwd: join(cache, OWNER, PROJECT, SHA), env: { PATH: `${env.PATH}:${cwd}`} },
 		);
 		break;
 	}
