@@ -95,7 +95,7 @@ async function exec(command, opts) {
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
 	await spawn(cmd, args, {
-	  env: { ...env, GITHUB_TOKEN: env.ACTIONS_RUNTIME_TOKEN },
+	  env: { ...env, GITHUB_TOKEN: env.INPUT_TOKEN },
 		...opts,
 	});
 }
