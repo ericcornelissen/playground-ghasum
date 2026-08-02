@@ -53,7 +53,7 @@ const CHECKSUM = env.INPUT_CHECKSUM.replace(/^sha256:/, "");
 const MODE = env.INPUT_MODE;
 const VERSION = env.INPUT_VERSION;
 
-// --- Script ------------------------------------------------------------------
+// --- Main --------------------------------------------------------------------
 try {
 	if (MODE !== "install" && MODE !== "verify") {
 		throw new Error(`mode must be 'install' or 'verify', got: ${MODE}`);
@@ -62,13 +62,10 @@ try {
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
 	await exec(["mkdir", "-p", cwd]);
 	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
-	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM);
+	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM, null);
 	await exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
 	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
 	await exec(["tar", "-xf", archive], { cwd });
-
-	await exec(["ls", "-al", cwd], { cwd });
-	await exec(["ls", "-al", join(cache, OWNER, PROJECT, SHA)], { cwd });
 
 	switch (MODE) {
 	case "install":
@@ -95,9 +92,7 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { stdout, stderr } = await spawn(cmd, args, opts);
-	console.log("stdout", stdout)
-	console.log("stderr", stderr)
+	await spawn(cmd, args, opts);
 }
 
 function nuke() {
