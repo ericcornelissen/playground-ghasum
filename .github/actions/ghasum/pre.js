@@ -59,7 +59,6 @@ try {
 	}
 
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
-	exec(["mkdir", "-p", cwd]);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM, null);
 	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
@@ -86,12 +85,17 @@ try {
 }
 
 // --- Functions ---------------------------------------------------------------
-function exec(command, opts) {
+function exec(command) {
 	console.info("$", command.join(" "));
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	spawnSync(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
+	const opts = {
+	  env: { ...env, GITHUB_TOKEN },
+		stdio: "inherit" ,
+		cwd,
+	};
+	spawnSync(cmd, args, opts);
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
