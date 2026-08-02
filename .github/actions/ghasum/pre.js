@@ -10,7 +10,7 @@ import { env, exit } from "node:process";
 
 // --- Constants ---------------------------------------------------------------
 const CHECKSUM_FILE = "checksums-sha512.txt";
-const REPOSITORY = "chains-project/ghasum";
+const GHASUM_REPOSITORY = "chains-project/ghasum";
 
 // --- Context -----------------------------------------------------------------
 const ARCH = arch().toLowerCase();
@@ -59,9 +59,9 @@ try {
 	}
 
 	const cwd = await mkdtemp(join(tmpdir(), 'ghasum-'));
-	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
+	exec(["gh", "release", "download", VERSION, "--repo", GHASUM_REPOSITORY, "--pattern", CHECKSUM_FILE], { cwd });
 	await sum(cwd, CHECKSUM_FILE, 256, CHECKSUM, null);
-	exec(["gh", "release", "download", VERSION, "--repo", REPOSITORY, "--pattern", archive], { cwd });
+	exec(["gh", "release", "download", VERSION, "--repo", GHASUM_REPOSITORY, "--pattern", archive], { cwd });
 	await sum(cwd, archive, 512, null, CHECKSUM_FILE);
 	exec(["tar", "-xf", archive], { cwd });
 
