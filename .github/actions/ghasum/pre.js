@@ -87,7 +87,7 @@ try {
 
 // --- Functions ---------------------------------------------------------------
 function exec(command, opts) {
-	console.info("$", command.join(" ")});
+	console.info("$", command.join(" "));
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
