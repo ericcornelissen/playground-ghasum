@@ -91,9 +91,9 @@ function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { status } = spawnSync(cmd, args, { stdio: ["pipe", "pipe", "pipe"], ...opts });
+	const { status, stderr } = spawnSync(cmd, args, opts);
 	if (status !== 0) {
-		throw new Error("Command failed");
+		throw new Error(`Command failed: ${stderr}`);
 	}
 }
 
