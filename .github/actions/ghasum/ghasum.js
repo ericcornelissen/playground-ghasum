@@ -83,7 +83,6 @@ try {
 	exit(0);
 } catch (error) {
 	console.error(`::error::${error}`);
-	console.log(error)
 	nuke();
 	exit(1);
 }
@@ -94,10 +93,7 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const { status, stdout, stderr } = await spawn(cmd, args, opts);
-	if (status !== 0) {
-		throw new Error(`Command failed: ${stdout} ${stderr}`);
-	}
+	await spawn(cmd, args, opts);
 }
 
 function nuke() {
