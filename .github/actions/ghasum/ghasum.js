@@ -28,7 +28,7 @@ let cache;
 switch (OS) {
 case "darwin": cache = "/Users/runner/work/_actions"; break;
 case "linux":  cache = "/home/runner/work/_actions";  break;
-case "win32":  cache = "C:\\a\\_actions";             break;
+case "win32":  cache = "D:\\a\\_actions";             break;
 }
 
 let archive;
