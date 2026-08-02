@@ -90,15 +90,12 @@ try {
 
 // --- Functions ---------------------------------------------------------------
 async function exec(command, opts) {
-	console.info(command.join(" "));
+	console.info("$", command.join(" "));
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	await spawn(cmd, args, {
-	  env: { ...env, GITHUB_TOKEN },
-		stdio: "inherit",
-		...opts,
-	});
+	const { stdout } = await spawn(cmd, args, { env: { ...env, GITHUB_TOKEN }, ...opts });
+	console.info(stdout);
 }
 
 function nuke() {
@@ -113,10 +110,10 @@ async function sum(wd, target, algo, sum, sumfile) {
 	const got = hasher.digest("hex");
 	let want;
 	if (sum) {
-		console.info(`echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -`);
+		console.info(`$ echo '${CHECKSUM}  ${CHECKSUM_FILE}' | shasum -a ${algo} -c -`);
 		want = sum;
 	} else {
-		console.info(`shasum --check --ignore-missing ${sumfile}`);
+		console.info(`$ shasum --check --ignore-missing ${sumfile}`);
 		const sums = await readFile(join(wd, sumfile), { encoding: "utf8" });
 		const line = sums.split(/\r?\n/).find(line => line.endsWith(target));
 		want = line.split(" ").at(0);
