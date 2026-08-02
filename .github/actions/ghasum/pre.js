@@ -85,17 +85,16 @@ try {
 }
 
 // --- Functions ---------------------------------------------------------------
-function exec(command) {
+function exec(command, opts) {
 	console.info("$", command.join(" "));
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	const opts = {
+	spawnSync(cmd, args,  {
 	  env: { ...env, GITHUB_TOKEN },
 		stdio: "inherit" ,
-		cwd,
-	};
-	spawnSync(cmd, args, opts);
+		...opts
+	});
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
