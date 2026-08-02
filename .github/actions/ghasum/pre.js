@@ -90,11 +90,15 @@ function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	spawnSync(cmd, args,  {
-	  env: { ...env, GITHUB_TOKEN },
+	const { status } = spawnSync(cmd, args,  {
+		env: { ...env, GITHUB_TOKEN },
 		stdio: "inherit" ,
 		...opts
 	});
+
+	if (status !== 0) {
+		throw new Error("Command failed");
+	}
 }
 
 async function sum(wd, target, algo, sum, sumfile) {
