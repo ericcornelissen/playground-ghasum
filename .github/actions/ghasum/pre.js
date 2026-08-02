@@ -23,7 +23,7 @@ const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
 const OWNER = env.GITHUB_REPOSITORY.split("/").at(0);
 const PROJECT = env.GITHUB_REPOSITORY.split("/").at(1);
-const WORKFLOW = env.INPUT_WORKFLOW; //env.GITHUB_WORKFLOW_REF.split(/[/@]/g).slice(2,5).join("/");
+const WORKFLOW = env.INPUT_WORKFLOW.split(/[/@]/g).slice(2,5).join("/");
 const GITHUB_TOKEN = env.INPUT_TOKEN;
 
 let cache;
