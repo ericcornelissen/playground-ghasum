@@ -19,6 +19,7 @@ const ARCH = arch().toLowerCase();
 const OS = platform().toLowerCase();
 
 console.log(env)
+console.log(await readFile("/home/runner/work/_temp/_github_workflow/event.json", { encoding: "utf8"}))
 const JOB = env.GITHUB_JOB;
 const SHA = env.GITHUB_WORKFLOW_SHA;
 const OWNER = env.GITHUB_REPOSITORY.split("/").at(0);
@@ -93,7 +94,10 @@ async function exec(command, opts) {
 
 	const cmd = command[0];
 	const args = command.slice(1, command.length);
-	await spawn(cmd, args, { env: { GITHUB_TOKEN: env.INPUT_TOKEN }, ...opts });
+	await spawn(cmd, args, {
+	  env: { ...env, GITHUB_TOKEN: env.ACTIONS_RUNTIME_TOKEN },
+		...opts,
+	});
 }
 
 function nuke() {
