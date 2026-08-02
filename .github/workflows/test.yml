@@ -7,7 +7,7 @@ permissions: read-all
 jobs:
   reusing-1:
     uses: ./.github/workflows/reusable-workflow.yml
-  reusing-1:
+  reusing-2:
     uses: $/.github/workflows/reusable-workflow.yml
   test-install:
     runs-on: ${{ matrix.runs-on }}
