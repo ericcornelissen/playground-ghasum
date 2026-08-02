@@ -17,6 +17,10 @@ jobs:
     steps:
       - name: Verify action checksums
         uses: $/.github/actions/ghasum
+      - name: Step with pre-script
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       - name: action
         uses: actions/setup-go@v7.0.0
         with:

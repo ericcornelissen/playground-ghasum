@@ -79,7 +79,7 @@ try {
 
 	exit(0);
 } catch (error) {
-	console.error(`::error::${error}`);
+	console.error(`::error::${error.message}`);
 	nuke();
 	exit(1);
 }
